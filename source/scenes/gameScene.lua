@@ -35,6 +35,6 @@ function GameScene:update()
         BulletShootAllow() --IF 'B' BUTTON IS PRESSED, SHOOTS A BULLET FROM MOON
         EnemyTimerResetCheck() --RESETS ENEMY TIMER AFTER SET DURATION (EnemySpawnRate)
     else
-        
+        AtoGameOver()
     end
 end

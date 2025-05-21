@@ -21,6 +21,17 @@ function GameOverScene:init()
     titleSprite:moveTo(200,20)
     titleSprite:add()
 
+    --RESTART MESSAGE
+    local text = "PRESS 'B' TO TRY AGAIN"
+    gfx.setFont(Topaz11Font)
+    local messageImage = gfx.image.new(gfx.getTextSize(text))
+    gfx.pushContext(messageImage)
+        gfx.drawText(text,0,0)
+    gfx.popContext()
+    local messageSprite = gfx.sprite.new(messageImage)
+    messageSprite:moveTo(200,40)
+    messageSprite:add()
+
     InitializeScoreBoard()
     InitializeInitials()
     HighScoreCheck()

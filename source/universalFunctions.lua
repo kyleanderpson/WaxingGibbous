@@ -51,6 +51,8 @@ function VariableSet()
   PlayerScore = 0
   GameOver = false
 
+  AContinue = false
+
   OrbitRadius = 90
   OrbitCenterX = 200
   OrbitCenterY = 120
@@ -180,4 +182,26 @@ function NiceOrbit()
   local textSprite = gfx.sprite.new(textImage)
   textSprite:moveTo(200,10)
   textSprite:add()
+
+  local text = "PRESS 'A' TO CONTINUE"
+  local textImage = gfx.image.new(gfx.getTextSize(text))
+    gfx.pushContext(textImage)
+    gfx.setColor(gfx.kColorWhite)
+    gfx.drawText(text,0,0)
+  gfx.popContext()
+  local textSprite = gfx.sprite.new(textImage)
+  textSprite:moveTo(200,24)
+  textSprite:add()
+  AContinue = true
+  print("nice orbit triggered. AContinue value:")
+  print(AContinue)
+end
+
+function AtoGameOver()
+  if AContinue == true then
+    if pd.buttonJustPressed(pd.kButtonA) then
+      SCENE_MANAGER:switchScene(GameOverScene)
+      AContinue = false
+    end
+  end
 end
