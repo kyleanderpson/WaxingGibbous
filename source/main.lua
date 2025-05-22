@@ -32,14 +32,6 @@ SoundLoad()
 --ResetScoreBoardToTemplate()
 LoadSave()
 
-print("does ScoreSave exist?")
-print(ScoreSave[1])
-print(ScoreSave[2])
-print(ScoreSave[3])
-print(ScoreSave[4])
-print(ScoreSave[5])
-print("does ScoreArray exist?")
-print(ScoreArray[1][1])
 
 ----------------------------------------------------------------------------------------------------
 SCENE_MANAGER = SceneManager()
