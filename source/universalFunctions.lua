@@ -2,13 +2,17 @@ local pd = playdate
 local gfx = pd.graphics
 
 function DevMode()
-  --RIGHT D-PAD TO RESTART
-  if pd.buttonJustPressed(pd.kButtonRight) then
-    pd.restart()
-  end
-  --DOWN D-PAD TO GAME OVER
-    if pd.buttonJustPressed(pd.kButtonDown) then
-      SCENE_MANAGER:switchScene(GameOverScene)
+  if pd.buttonIsPressed(pd.kButtonA) then
+    if pd.buttonIsPressed(pd.kButtonB) then
+      --RIGHT D-PAD TO RESTART
+      if pd.buttonJustPressed(pd.kButtonUp) then
+        pd.restart()
+      end
+      --DOWN D-PAD TO GAME OVER
+      if pd.buttonJustPressed(pd.kButtonDown) then
+        SCENE_MANAGER:switchScene(GameOverScene)
+      end
+    end
   end
 end
 
