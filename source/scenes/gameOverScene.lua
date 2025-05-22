@@ -33,9 +33,12 @@ function GameOverScene:init()
     messageSprite:add()
 
     InitializeScoreBoard()
-    InitializeInitials()
     HighScoreCheck()
-    --ScoreRankMessage()
+    ScoreRankMessage()
+    if RankOccurs == true then
+        InitializeInitials()
+    end
+    
     self:add()
     print(text)
 

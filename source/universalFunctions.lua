@@ -1,6 +1,24 @@
 local pd = playdate
 local gfx = pd.graphics
 
+function LoadSave()
+-- we will be grabbing high score date here. Should be identical format to ScoreArray
+    if playdate.file.exists("scoreSave.json") then
+      print("save data exists")
+      ScoreSave = playdate.datastore.read("scoreSave")
+      print("created ScoreSave")
+      ScoreArrayBuildUp()
+    else
+        LoadScoreBoardTemplate()
+    end
+end
+
+function ResetScoreBoardToTemplate()
+  LoadScoreBoardTemplate()
+  ScoreArrayBreakDown()
+  pd.datastore.write(SaveTable, "scoreSave")
+end
+
 function DevMode()
   if pd.buttonIsPressed(pd.kButtonA) then
     if pd.buttonIsPressed(pd.kButtonB) then
@@ -56,6 +74,7 @@ function VariableSet()
   GameOver = false
 
   AContinue = false
+  InitialsAreEntered = false
 
   OrbitRadius = 90
   OrbitCenterX = 200

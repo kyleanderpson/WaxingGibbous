@@ -40,18 +40,28 @@ InitialsCharacters = {
     [27] = "Z"
 }
 
-function EntryMessage()
-    --FontSwitch(Topaz11Font)
-    local message = "ENTER YOUR INITIALS: "
-    local messageImage = gfx.image.new(gfx.getTextSize(message))
-    gfx.pushContext(messageImage)
-        gfx.setColor(gfx.kColorBlack)
-        gfx.drawText(message,0,0)
-    gfx.popContext()
-    local messageSprite = gfx.sprite.new(messageImage)
-    messageSprite:setCenter(1,0.5)
-    messageSprite:moveTo(190,100)
-    messageSprite:add()
+function InitialsEntryCheck()
+    if pd.buttonJustPressed(pd.kButtonA) then
+        InitialsAreEntered = true
+        InitialsUnderlineSprite:remove()
+        print("Initials have been entered.")
+        local initial1 = InitialsEntry[1]
+        local initial2 = InitialsEntry[2]
+        local initial3 = InitialsEntry[3]
+        EntryName = initial1..initial2..initial3
+        EntryArray = {
+            [1] = initial1,
+            [2] = initial2,
+            [3] = initial3
+        }
+        EntryScore = PlayerScore
+        print("EntryName: "..EntryName)
+        print("EntryScore: "..EntryScore)
+        print("\nAttempting RedoScoreArray()")
+        RedoScoreArray()
+        ScoreArrayBreakDown()
+        pd.datastore.write(SaveTable,"scoreSave")
+    end
 end
 
 function Initials:init()
@@ -76,29 +86,26 @@ end
 
 function Initials:update()
     Initials.super.update(self)
-    if pd.buttonJustPressed(pd.kButtonRight) then
-        if InitialsUnderlineSprite.x == InitialsSelectorSlot1 then
-            InitialsUnderlineSprite:moveTo(InitialsSelectorSlot2, InitialsSelectorY)
-            SelectedInitial = 2
-            print("SelectedInitial = "..SelectedInitial)
-        elseif InitialsUnderlineSprite.x == InitialsSelectorSlot2 then
-            InitialsUnderlineSprite:moveTo(InitialsSelectorSlot3, InitialsSelectorY)
-            SelectedInitial = 3
-            print("SelectedInitial = "..SelectedInitial)
-        end
+    if InitialsAreEntered ~= true then
+        print("checking value of HighScore8: "..tostring(HighScore8))
+        InitialsEntryCheck()
+        MoveInitialsSelector()
+        InitialsChange()
     end
-    if pd.buttonJustPressed(pd.kButtonLeft) then
-        if InitialsUnderlineSprite.x == InitialsSelectorSlot2 then
-            InitialsUnderlineSprite:moveTo(InitialsSelectorSlot1, InitialsSelectorY)
-            SelectedInitial = 1
-            print("SelectedInitial = "..SelectedInitial)
-        elseif InitialsUnderlineSprite.x == InitialsSelectorSlot3 then
-            InitialsUnderlineSprite:moveTo(InitialsSelectorSlot2, InitialsSelectorY)
-            SelectedInitial = 2
-            print("SelectedInitial = "..SelectedInitial)
-        end
-    end
-    InitialsChange()
+end
+
+function EntryMessage()
+    --FontSwitch(Topaz11Font)
+    local message = "ENTER YOUR INITIALS: "
+    local messageImage = gfx.image.new(gfx.getTextSize(message))
+    gfx.pushContext(messageImage)
+        gfx.setColor(gfx.kColorBlack)
+        gfx.drawText(message,0,0)
+    gfx.popContext()
+    local messageSprite = gfx.sprite.new(messageImage)
+    messageSprite:setCenter(1,0.5)
+    messageSprite:moveTo(190,100)
+    messageSprite:add()
 end
 
 function InitialsChange()
@@ -168,7 +175,6 @@ function InitialsChange()
     end
 end
 
-
 function InitializeInitials()
     InitialsInstance = Initials()
     InitialsInstance:add()
@@ -179,6 +185,31 @@ function InitialsSelector()
     InitialsUnderlineSprite = gfx.sprite.new(underlineImage)
     InitialsUnderlineSprite:moveTo(InitialsSelectorSlot1,InitialsSelectorY)
     InitialsUnderlineSprite:add()
+end
+
+function MoveInitialsSelector()
+    if pd.buttonJustPressed(pd.kButtonRight) then
+        if InitialsUnderlineSprite.x == InitialsSelectorSlot1 then
+            InitialsUnderlineSprite:moveTo(InitialsSelectorSlot2, InitialsSelectorY)
+            SelectedInitial = 2
+            print("SelectedInitial = "..SelectedInitial)
+        elseif InitialsUnderlineSprite.x == InitialsSelectorSlot2 then
+            InitialsUnderlineSprite:moveTo(InitialsSelectorSlot3, InitialsSelectorY)
+            SelectedInitial = 3
+            print("SelectedInitial = "..SelectedInitial)
+        end
+    end
+    if pd.buttonJustPressed(pd.kButtonLeft) then
+        if InitialsUnderlineSprite.x == InitialsSelectorSlot2 then
+            InitialsUnderlineSprite:moveTo(InitialsSelectorSlot1, InitialsSelectorY)
+            SelectedInitial = 1
+            print("SelectedInitial = "..SelectedInitial)
+        elseif InitialsUnderlineSprite.x == InitialsSelectorSlot3 then
+            InitialsUnderlineSprite:moveTo(InitialsSelectorSlot2, InitialsSelectorY)
+            SelectedInitial = 2
+            print("SelectedInitial = "..SelectedInitial)
+        end
+    end
 end
 
 function InitialsDraw()
