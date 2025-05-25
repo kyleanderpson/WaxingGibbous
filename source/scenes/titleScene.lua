@@ -6,6 +6,11 @@ local gfx = pd.graphics
 class('TitleScene').extends(gfx.sprite)
 
 function TitleScene:init()
+
+
+    
+
+    
     --TITLE TEXT SPRITE
     local text = "WAXING GIBBOUS"
     local titleImage = gfx.image.new(gfx.getTextSize(text))
@@ -27,7 +32,7 @@ function TitleScene:init()
     local messageSprite = gfx.sprite.new(messageImage)
     messageSprite:moveTo(200,60)
     messageSprite:add()
-
+    
     InitializeScoreBoard()
     self:add()
     TitleSound:play(1)

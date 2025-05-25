@@ -51,6 +51,7 @@ function MainImport()
   import "scenes/titleScene"
   import "scenes/gameOverScene"
 
+  import "objects/logo"
   import "objects/scoreBoard"
   import "objects/score"
   import "objects/bullet"
