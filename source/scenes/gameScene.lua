@@ -9,6 +9,8 @@ function GameScene:init()
     FontCheck = true
     
     --SETS INITIAL MOON-PLACEMENT ON ELLIPSE TO MATCH CRANK ANGLE
+    local startPosition = pd.getCrankPosition()
+    OrbitAngle = startPosition
     Moonx,Moony = DegreesToCoords(OrbitAngle)
 
     --INSTANTIATES BLACK RECTANGLE BACKGROUND
@@ -21,8 +23,6 @@ function GameScene:init()
     MoonSpawn()
 
     GameStartSound:play(1)
-
-    --FontSwitch(Topaz11Font)
 
     self:add()
 end

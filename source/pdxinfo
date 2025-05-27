@@ -4,3 +4,4 @@ description=Lunar Phaser, shoot from the moon
 bundleID=
 version=1.0.0
 buildNumber=1
+imagePath=images/card.png

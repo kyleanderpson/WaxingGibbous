@@ -7,10 +7,6 @@ class('TitleScene').extends(gfx.sprite)
 
 function TitleScene:init()
 
-
-    
-
-    
     --TITLE TEXT SPRITE
     local text = "WAXING GIBBOUS"
     local titleImage = gfx.image.new(gfx.getTextSize(text))

@@ -86,8 +86,7 @@ function VariableSet()
 
   FontCheck = false
 
-  EarthHits = 0
-  EarthGrowth = 0
+
 
   EnemyTargetCircle = pd.geometry.arc.new(200,120,240,0,360) --LENGTH = 1507.964
   LevelCounter = 0
@@ -105,7 +104,9 @@ function SoundLoad()
   PhaseSound = pd.sound.sampleplayer.new("sounds/GAMESTART/MSPACMAN_firstloop")
   EarthHitSound = pd.sound.sampleplayer.new("sounds/SHOOT/GnG_woo")
   MoonExplodeSound = pd.sound.sampleplayer.new("sounds/GAMEOVER/GALAGA_explosion")
+  LunarCycleSound = pd.sound.sampleplayer.new("sounds/LEVEL/DK_hammerhit")
 end
+
 
 function SaveGameData()
     -- Save game data into a table first
@@ -184,16 +185,43 @@ function FontSwitch(newFont)
 end
 
 function LevelUpCheck()
-  if (PlayerScore % 8) == 0 then
-    LevelCounter += 1
-    PhaseSound:play(1)
-    ResetEnemyRate()
+  print("performing LevelUpCheck")
+  --if PlayerScore <= 40 then
+    if (PlayerScore % 8) == 0 then
+      LevelCounter += 1
+      PhaseSound:play(1)
+      ResetEnemyRate()
+    end
+  --end
+  if PlayerScore % 30 == 0 then --WHEN SCORE IS MULTIPLE OF 30, DISPLAY LUNAR CYCLE MESSAGE
+    print("LUNAR CYCLE ACHIEVED!")
+    LunarCycle()
+    print("called LunarCycle()")
   end
+  if PlayerScore > 30 then
+    if PlayerScore % 30 == 2 then
+      CycleMessageSprite:remove()
+    end
+end
 end
 
-function LevelUp()
-  
+function LunarCycle()
+  EnemySpeed = EnemySpeed * 3/4
+
+  local text = "LUNAR CYCLE!"
+  FontSwitch(Topaz11Font)
+  local textImage = gfx.image.new(gfx.getTextSize(text))
+  gfx.pushContext(textImage)
+    gfx.setColor(gfx.kColorWhite)
+    gfx.drawText(text,0,0)
+  gfx.popContext()
+  CycleMessageSprite = gfx.sprite.new(textImage)
+  CycleMessageSprite:moveTo(200,10)
+  CycleMessageSprite:add()
+  print("added CycleMessageSprite")
+  LunarCycleSound:play(1)
 end
+
 
 function NiceOrbit()
   local text = "NICE ORBIT!"
