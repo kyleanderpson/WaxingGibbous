@@ -9,14 +9,19 @@ local gfx = pd.graphics
 
 class('Earth').extends(gfx.sprite)
 
+
+
 function Earth:init(x,y)
     EarthInitRadius = 8
     EarthImage = gfx.image.new((EarthInitRadius*2),(EarthInitRadius*2))
+    ContinentImageMold = gfx.image.new("images/earthSprite160")
     Earth.super.init(self)
     gfx.pushContext(EarthImage)
-    gfx.setColor(gfx.kColorWhite)
-    gfx.drawCircleAtPoint(EarthInitRadius,EarthInitRadius,EarthInitRadius)
-    gfx.fillCircleAtPoint(EarthInitRadius,EarthInitRadius,EarthInitRadius-2)
+        gfx.setColor(gfx.kColorWhite)
+        gfx.drawCircleAtPoint(EarthInitRadius,EarthInitRadius,EarthInitRadius)
+        gfx.setColor(gfx.kColorBlack)
+        gfx.fillCircleAtPoint(EarthInitRadius,EarthInitRadius,EarthInitRadius-2)
+        ContinentImageMold:drawScaled(0,0, ((EarthGrowth)/80))
     gfx.popContext()
     self:setImage(EarthImage)
     --self:setCollideRect(0,0,EarthInitRadius,EarthInitRadius)
@@ -33,7 +38,9 @@ function Earth:update()
     Earth.super.update(self)
     if EarthHits == 1 then
         GrowEarth(EarthGrowth)
+        print("EarthGrowth value before addition:"..EarthGrowth)
         EarthGrowth += 8 --HERE IS WHERE WE SET THE SIZE OF EARTH GROWTH UPON HIT
+        print("EarthGrowth value after addition (equals current Earth radius):"..EarthGrowth)
         EarthHits = 0
         --EnemySpawner = pd.geometry.arc.new(200,120,EarthGrowth + EarthInitRadius, 0,360)
     end
@@ -63,9 +70,11 @@ end
 function GrowEarth(EarthGrowth)
     EarthImage = gfx.image.new((EarthGrowth + EarthInitRadius)*2,(EarthGrowth + EarthInitRadius)*2)
     gfx.pushContext(EarthImage)
-    gfx.setColor(gfx.kColorWhite)
-    gfx.drawCircleAtPoint(EarthInitRadius+EarthGrowth,EarthInitRadius+EarthGrowth,EarthInitRadius+EarthGrowth)
-    gfx.fillCircleAtPoint(EarthInitRadius+EarthGrowth,EarthInitRadius+EarthGrowth,EarthInitRadius+EarthGrowth-2)
+        gfx.setColor(gfx.kColorWhite)
+        gfx.drawCircleAtPoint(EarthInitRadius+EarthGrowth,EarthInitRadius+EarthGrowth,EarthInitRadius+EarthGrowth)
+        gfx.setColor(gfx.kColorBlack)
+        gfx.fillCircleAtPoint(EarthInitRadius+EarthGrowth,EarthInitRadius+EarthGrowth,EarthInitRadius+EarthGrowth-2) 
+        ContinentImageMold:drawScaled(0,0, ((EarthGrowth+8)/80))
     gfx.popContext()
     EarthInstance:setImage(EarthImage)
     EarthInstance:setCollideRect(2,2,(EarthInitRadius+EarthGrowth)*2-2,(EarthInitRadius+EarthGrowth)*2-2)
