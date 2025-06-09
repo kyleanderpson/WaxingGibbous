@@ -198,9 +198,6 @@ function ScoreDraw()
     end
 end
 
-
-
-
 function RedoScoreArray()
     local pastScore1 = HighScore1
     local pastScore2 = HighScore2
@@ -340,8 +337,6 @@ function LoadScoreArrayFromTemplate()
         }
 end
 
-
-
 function LoadScoreBoardTemplate() --creates ScoreArray, global array with all scoreboard info
     Name1 = {"W","A","X"}
     Name2 = {"K","Y","L"}
@@ -381,7 +376,6 @@ function ScoreArrayBuildUp()
     HighScore8 = {ScoreSave[36],Name8, ScoreSave[40]}
     LoadScoreArrayFromTemplate()
 end
-
 
 function ScoreArrayBreakDown()
     Save1_1 = ScoreArray[1][1]

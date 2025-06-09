@@ -25,5 +25,3 @@ function InitializeScore(x,y)
     ScoreInstance = Score(x,y)
     ScoreInstance:add()
 end
-
---ScoreBoard = gfx.drawTextAligned("SCORE: "..PlayerScore,5,5,kTextAlignment.left)

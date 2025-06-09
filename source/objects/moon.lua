@@ -17,20 +17,6 @@ end
 function Moon:update()
     Moon.super.update(self)
     MoonInstance:moveTo(Moonx,Moony)
-    --[[
-    local actualX, actualY, collisions, length = self:checkCollisions(self.x,self.y)
-
-    if length > 0 then
-        local otherSprite = self:overlappingSprites()
-        if otherSprite[1] == EnemyInstance then
-            SCENE_MANAGER:switchScene(GameOverScene)
-            --self:removeSprite()
-        end
-        --otherSprite[1]:removeSprite()
-        --self:removeSprite()
-        --PlayerScore += 1
-    end
-    ]]
 end
 
 function MoonSpawn()

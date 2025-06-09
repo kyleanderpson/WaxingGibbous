@@ -107,7 +107,6 @@ function SoundLoad()
   LunarCycleSound = pd.sound.sampleplayer.new("sounds/LEVEL/DK_hammerhit")
 end
 
-
 function SaveGameData()
     -- Save game data into a table first
     local gameData = {
@@ -126,7 +125,6 @@ end
 function playdate.gameWillSleep()
     SaveGameData()
 end
-
 
 --KEEPS CRANK ANGLE WITHIN 0-360 RANGE
 function NormalizeAngle(a)
@@ -221,7 +219,6 @@ function LunarCycle()
   print("added CycleMessageSprite")
   LunarCycleSound:play(1)
 end
-
 
 function NiceOrbit()
   local text = "NICE ORBIT!"

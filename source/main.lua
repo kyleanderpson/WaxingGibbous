@@ -10,7 +10,7 @@ FontLoad()
 VariableSet()
 
 SoundLoad()
-
+--[[
 --SaveTable has 40 indexes, of the 40 separate values stored in the scoreboard
 --8 entries, with 5 indexes each
 --it is taken from ScoreArray in the function ScoreArrayBreakDown()
@@ -30,8 +30,8 @@ SoundLoad()
 --print(ScoreArray[8][2][1])
 
 --ResetScoreBoardToTemplate()
+]]
 LoadSave()
-
 
 ----------------------------------------------------------------------------------------------------
 SCENE_MANAGER = SceneManager()
