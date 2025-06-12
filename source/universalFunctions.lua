@@ -1,25 +1,36 @@
 local pd = playdate
 local gfx = pd.graphics
 
-function LoadSave()
--- we will be grabbing high score date here. Should be identical format to ScoreArray
-    if playdate.file.exists("scoreSave.json") then
+--ALL OF OUR IMPORTANT GLOBAL FUNCTIONS ARE DECLARED HERE
+--SOME SPECIFIC-TO-OBJECT FUNCTIONS (THOUGH STILL GLOBAL) 
+--AND OTHERWISE MORE INTUITIVELY-LOCATED FUNCTIONS WILL BE FOUND WHERE WE (KYLE) EXPECT THEM TO BE
+--(PROBABLY WITHIN THE OBJECT FILE)
+
+function LoadSave() --WE WILL BE GRABBING HIGH SCORE DATA HERE.
+    if playdate.file.exists("scoreSave.json") then --CHECK IF SAVE DATA EXISTS
       print("save data exists")
-      ScoreSave = playdate.datastore.read("scoreSave")
+      ScoreSave = playdate.datastore.read("scoreSave") --REMEMBER, SAVE DATA IS ONLY ONE DEPTH ARRAY
       print("created ScoreSave")
-      ScoreArrayBuildUp()
+      ScoreArrayBuildUp() --HERE WE TAKE EVERY INDEX OF SAVE DATA AND BUILD IT BACK INTO OUR ScoreArray FORMAT (NESTED ARRAYS)
     else
-        LoadScoreBoardTemplate()
+        LoadScoreBoardTemplate() --IF NO SAVE DATA EXISTS, WE USE OUR SCOREBOARD TEMPLATE
+        print("no save data exists.\nusing scoreboard template")
     end
 end
 
-function ResetScoreBoardToTemplate()
+function ResetScoreBoardToTemplate() --WE CAN USE THIS TO RESET OUR SCOREBOARD
+--LETS KEEP THIS FUNCTION IN OUR MAIN LUA FILE, COMMENTED OUT
+--WHEN WE WANT TO WIPE SAVES, WE UN-COMMENT IT AND RUN BUILD-TASK
+--ONLY RUN ONCE, THEN GO BACK AND COMMENT IT OUT.
+--FOR NOW I AM USING THIS FUNCTION ONLY WHEN I WANT TO WIPE THE SCOREBOARD, AS DEVELOPER PRIVELEGE
+--LATER, I MAY WANT TO ALLOW THIS AS AN OPTION (ON TITLE SCREEN) FOR THE PLAYER
   LoadScoreBoardTemplate()
   ScoreArrayBreakDown()
   pd.datastore.write(SaveTable, "scoreSave")
 end
 
-function DevMode()
+function DevMode() --HOTKEYS FOR DEVELOPMENT USE
+--ACCESS HOTKEYS BY HOLDING 'A' AND 'B' BUTTONS FIRST. THEN D-PAD GIVES OPTIONS
   if pd.buttonIsPressed(pd.kButtonA) then
     if pd.buttonIsPressed(pd.kButtonB) then
       --RIGHT D-PAD TO RESTART
@@ -34,7 +45,7 @@ function DevMode()
   end
 end
 
-function MainImport()
+function MainImport() --INCLUDES ALL IMPORTS FOR TOP OF MAIN LUA FILE
   import "CoreLibs/object"
   import "CoreLibs/graphics"
   import "CoreLibs/sprites"
@@ -45,13 +56,11 @@ function MainImport()
   import "CoreLibs/frameTimer"
 
   import "class/sceneManager"
-  import "class/highScores"
 
   import "scenes/gameScene"
   import "scenes/titleScene"
   import "scenes/gameOverScene"
 
-  import "objects/logo"
   import "objects/scoreBoard"
   import "objects/score"
   import "objects/bullet"
@@ -61,16 +70,16 @@ function MainImport()
   import "objects/initials"
 end
 
-function FontLoad()
+function FontLoad() --LOADS/DECLARES ALL FONTS AND SETS INITIAL FONT
   Topaz11Font = gfx.font.new("fonts/topaz_11")
-Topaz22Font = gfx.font.new("fonts/topaz_22")
-Topaz16Font = gfx.font.new("fonts/topaz_16")
-Diamond12Font = gfx.font.new("fonts/diamond_12")
-Diamond20Font = gfx.font.new("fonts/diamond_20")
-gfx.setFont(Topaz22Font)
+  Topaz22Font = gfx.font.new("fonts/topaz_22")
+  Topaz16Font = gfx.font.new("fonts/topaz_16")
+  Diamond12Font = gfx.font.new("fonts/diamond_12")
+  Diamond20Font = gfx.font.new("fonts/diamond_20")
+  gfx.setFont(Topaz22Font)
 end
 
-function VariableSet()
+function VariableSet() --SETS ALL INITIAL VALUES FOR GLOBAL VARIABLES
   PlayerScore = 0
   GameOver = false
 
@@ -86,8 +95,6 @@ function VariableSet()
 
   FontCheck = false
 
-
-
   EnemyTargetCircle = pd.geometry.arc.new(200,120,240,0,360) --LENGTH = 1507.964
   LevelCounter = 0
 
@@ -95,7 +102,8 @@ function VariableSet()
   Leveler = false
 end
 
-function SoundLoad()
+function SoundLoad() --LOADS/DECLARES ALL SOUNDS
+--FOR NOW, WE ARE BLATANTLY PLAGIARIZING SOME OF MY FAVORITE ARCADE CABINETS
   ShootSound = pd.sound.sampleplayer.new("sounds/SHOOT/GALAGA_fire")
   ScoreSound = pd.sound.sampleplayer.new("sounds/SCORE/JOUST_lava")
   GameStartSound = pd.sound.sampleplayer.new("sounds/GAMESTART/JOUST_start")
@@ -107,35 +115,31 @@ function SoundLoad()
   LunarCycleSound = pd.sound.sampleplayer.new("sounds/LEVEL/DK_hammerhit")
 end
 
-function SaveGameData()
-    -- Save game data into a table first
+function SaveGameScore() --THIS ONLY SAVES THE PlayerScore, WE IMPLEMENT IF GAME IS CLOSED OR SYSTEM SLEEPS
+    -- SAVE SCORE INTO A TABLE FIRST
     local gameData = {
         currentScore = PlayerScore
     }
-    -- Serialize game data table into the datastore
+    --SERIALIZE SCORE INTO THE DATASTORE
     pd.datastore.write(gameData)
 end
 
-function playdate.gameWillTerminate()
-    SaveGameData()
+function playdate.gameWillTerminate() --AUTOMATICALLY SAVES SCORE IF GAME IS TERMINATED
+--HONESTLY, I'M NOT SURE THIS IS THE RIGHT MOVE
+    SaveGameScore()
 end
 
--- Automatically save game data when the device goes
--- to low-power sleep mode because of a low battery
-function playdate.gameWillSleep()
-    SaveGameData()
+function playdate.gameWillSleep() --AUTOMATICALLY SAVES SCORE IF SYSTEM SLEEPS
+    SaveGameScore()
 end
 
---KEEPS CRANK ANGLE WITHIN 0-360 RANGE
-function NormalizeAngle(a)
+function NormalizeAngle(a) --KEEPS CRANK ANGLE WITHIN 0-360 RANGE
   if a >= 360 then a = a - 360 end
   if a < 0 then a = a + 360 end
   return a
 end
 
---TURNS CRANK ANGLE INTO COORDINATES ON ELLIPSE
---RETURNS AN X AND Y
-function DegreesToCoords(OrbitAngle)
+function DegreesToCoords(OrbitAngle) --TURNS CRANK ANGLE INTO COORDINATES ON ELLIPSE (MOON ORBIT). RETURNS X AND Y
   local crankRads = math.rad(OrbitAngle)
   local newMoonx = math.sin(crankRads) * EllipticMultiplier
   local newMoony = -1 * math.cos(crankRads)
@@ -146,7 +150,7 @@ function DegreesToCoords(OrbitAngle)
   return newMoonx,newMoony
 end
 
-function CrankInput()
+function CrankInput() --CHECKS FOR CHANGE IN CRANK POSITION AND APPLIES IT TO MOON POSITION
     if CrankChange ~= 0 then
       OrbitAngle += CrankChange
       OrbitAngle = NormalizeAngle(OrbitAngle)
@@ -154,20 +158,19 @@ function CrankInput()
     end
 end
 
---CREATES BLACK RECTANGLE BACKGROUND
-function InitializeBackground()
+
+function InitializeBackground() --CREATES BLACK RECTANGLE BACKGROUND
   local backgroundImage = gfx.image.new(400,240)
   gfx.pushContext(backgroundImage)
-  gfx.setColor(gfx.kColorBlack)
-  --gfx.setDitherPattern(0.9,gfx.image.kDitherTypeBayer2x2)
-  gfx.fillRect(0,0,400,240)
+    gfx.setColor(gfx.kColorBlack)
+    gfx.fillRect(0,0,400,240)
   gfx.popContext()
   local backgroundSprite = gfx.sprite.new(backgroundImage)
   backgroundSprite:moveTo(200,120)
   backgroundSprite:add()
 end
 
-function ScoreTracker()
+function ScoreTracker() --DISPLAYS SCORE VALUE WHEN/WHERE WE NEED IT
   if SCENE_MANAGER.newScene == GameScene then
     gfx.drawTextAligned("SCORE: "..PlayerScore,5,5,kTextAlignment.left)
   elseif SCENE_MANAGER.newScene == GameOverScene then
@@ -175,37 +178,34 @@ function ScoreTracker()
   end
 end
 
-function FontSwitch(newFont)
+function FontSwitch(newFont) --SWITCHES FONT, OBVIOUSLY
   if FontCheck == true then
     gfx.setFont(newFont)
     FontCheck = false
   end
 end
 
-function LevelUpCheck()
+function LevelUpCheck() --HANDLES PROGRESSIVE DIFFICULTY
   print("performing LevelUpCheck")
-  --if PlayerScore <= 40 then
-    if (PlayerScore % 8) == 0 then
+    if (PlayerScore % 8) == 0 then --IF PlayerScore IS A MULTIPLE OF 8, WE INCREASE THE ENEMY SPAWN RATE
       LevelCounter += 1
       PhaseSound:play(1)
       ResetEnemyRate()
     end
-  --end
-  if PlayerScore % 30 == 0 then --WHEN SCORE IS MULTIPLE OF 30, DISPLAY LUNAR CYCLE MESSAGE
+  if PlayerScore % 30 == 0 then --IF PlayerScore  IS A MULTIPLE OF 30, WE INCREASE THE ENEMY TRAVEL-SPEED
     print("LUNAR CYCLE ACHIEVED!")
-    LunarCycle()
+    LunarCycle() --THIS FUNCTION APPLIES TRAVEL-SPEED CHANGE
     print("called LunarCycle()")
   end
   if PlayerScore > 30 then
     if PlayerScore % 30 == 2 then
-      CycleMessageSprite:remove()
+      CycleMessageSprite:remove() --HERE WE REMOVE THE LUNAR-CYCLE-MESSAGE ONCE PLAYER ACCUMULATES TWO POINTS INTO NEW CYCLE
     end
-end
+  end
 end
 
-function LunarCycle()
+function LunarCycle() --INCREASES ENEMY TRAVEL-SPEED AND DISPLAYS LUNAR-CYCLE-MESSAGE
   EnemySpeed = EnemySpeed * 3/4
-
   local text = "LUNAR CYCLE!"
   FontSwitch(Topaz11Font)
   local textImage = gfx.image.new(gfx.getTextSize(text))
@@ -220,7 +220,8 @@ function LunarCycle()
   LunarCycleSound:play(1)
 end
 
-function NiceOrbit()
+function NiceOrbit() --HANDLES TEXT AFTER GAME OVER STATE IS ACHIEVED
+--BASICALLY WE TELL THE PLAYER "NICE ORBIT!" AND TELL THEM TO PRESS 'A' TO CONTINUE (TO GameOverScene)
   local text = "NICE ORBIT!"
   FontSwitch(Topaz11Font)
   local textImage = gfx.image.new(gfx.getTextSize(text))
@@ -246,7 +247,7 @@ function NiceOrbit()
   print(AContinue)
 end
 
-function AtoGameOver()
+function AtoGameOver() --ALLOWS 'A' BUTTON PRESS TO SWITCH TO GameOverScene
   if AContinue == true then
     if pd.buttonJustPressed(pd.kButtonA) then
       SCENE_MANAGER:switchScene(GameOverScene)

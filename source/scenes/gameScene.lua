@@ -1,3 +1,4 @@
+--GAME SCENE IS WHERE THE PLAY TAKES PLACE
 
 
 local pd = playdate
@@ -13,14 +14,9 @@ function GameScene:init()
     OrbitAngle = startPosition
     Moonx,Moony = DegreesToCoords(OrbitAngle)
 
-    --INSTANTIATES BLACK RECTANGLE BACKGROUND
-    InitializeBackground()
-
-    --INSTANTIATES EARTH SPRITE AT SCREEN-CENTER
-    InitializeEarth()
-
-    --INSTANTIATES PLAYER-MOON
-    MoonSpawn()
+    InitializeBackground() --INSTANTIATES BLACK RECTANGLE BACKGROUND
+    InitializeEarth() --INSTANTIATES EARTH SPRITE AT SCREEN-CENTER
+    MoonSpawn() --INSTANTIATES PLAYER-MOON
 
     GameStartSound:play(1)
 
@@ -28,13 +24,13 @@ function GameScene:init()
 end
 
 function GameScene:update()
-    CrankChange = pd.getCrankChange()
-    if GameOver == false then
+    CrankChange = pd.getCrankChange() --CHECKING FOR CRANK CHANGE EVERY FRAME
+    if GameOver == false then --WHILE PLAY IS ACTIVE:
         pd.frameTimer.updateTimers()
         CrankInput()--HANDLES CRANK MOVEMENT AS INPUT
         BulletShootAllow() --IF 'B' BUTTON IS PRESSED, SHOOTS A BULLET FROM MOON
         EnemyTimerResetCheck() --RESETS ENEMY TIMER AFTER SET DURATION (EnemySpawnRate)
     else
-        AtoGameOver()
+        AtoGameOver() --IF GAME OVER, HIT 'A' TO CONTINUE TO GameOverScene
     end
 end

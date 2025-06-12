@@ -1,5 +1,4 @@
-
-
+--GameOverScene DISPLAYS SCOREBOARD AND ALLOWS PLAYER TO INPUT HIGH SCORE INITIALS IF THEY RANK
 local pd = playdate
 local gfx = pd.graphics
 
@@ -32,11 +31,11 @@ function GameOverScene:init()
     messageSprite:moveTo(200,40)
     messageSprite:add()
 
-    InitializeScoreBoard()
-    HighScoreCheck()
-    ScoreRankMessage()
+    InitializeScoreBoard() --CREATES INSTANCE OF SCOREBOARD OBJECT
+    HighScoreCheck() --CHECKS TO SEE IF PLAYER RANKED ON THE BOARD
+    ScoreRankMessage() --TELLS PLAYER THEIR RANK
     if RankOccurs == true then
-        InitializeInitials()
+        InitializeInitials() --IF RANKED, MANIPULATABLE INITIALS OBJECT IS CREATED
     end
     
     self:add()
@@ -46,7 +45,7 @@ function GameOverScene:init()
 end
 
 function GameOverScene:update()
-    if pd.buttonJustPressed(pd.kButtonB) then
+    if pd.buttonJustPressed(pd.kButtonB) then --HITTING 'B' WILL KICK RESTART GAME, ALLOWS FOR SKIPPING INITIALS ENTRY
         pd.restart()
     end
 end

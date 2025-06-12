@@ -1,3 +1,6 @@
+--SCORE OBJECT IS A SPRITE THAT DISPLAYS PlayerScore VALUE
+--IT SITS IN THE TOP LEFT CORNER OF SCREEN DURING PLAY
+
 import "CoreLibs/sprites"
 import "CoreLibs/graphics"
 
@@ -21,7 +24,7 @@ function Score:update()
     Score.super.update(self)
 end
 
-function InitializeScore(x,y)
+function InitializeScore(x,y) --CREATES INSTANCE OF SCORE OBJECT
     ScoreInstance = Score(x,y)
     ScoreInstance:add()
 end

@@ -1,4 +1,4 @@
-
+--WE USE OUR CLASS 'SceneManger' TO SWITCH BETWEEN SCENES
 
 local pd = playdate
 local gfx = pd.graphics

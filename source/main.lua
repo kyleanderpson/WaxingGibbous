@@ -5,12 +5,13 @@ MainImport()
 local pd = playdate
 local gfx = pd.graphics
 
-FontLoad()
+FontLoad() --LOADS ALL FONT FILES
 
-VariableSet()
+VariableSet() --INITIAL SET OF VARIABLES
 
-SoundLoad()
---[[
+SoundLoad() --LOADS ALL SOUND FILES
+
+--[[ HERE IS HOW SCORE SAVE WORKS
 --SaveTable has 40 indexes, of the 40 separate values stored in the scoreboard
 --8 entries, with 5 indexes each
 --it is taken from ScoreArray in the function ScoreArrayBreakDown()
@@ -31,20 +32,22 @@ SoundLoad()
 
 --ResetScoreBoardToTemplate()
 ]]
-LoadSave()
+LoadSave() --CHECKS FOR SAVE DATA AND APPLIES IT (SCOREBOARD VALUES)
+
+--ResetScoreBoardToTemplate()
 
 ----------------------------------------------------------------------------------------------------
-SCENE_MANAGER = SceneManager()
-HIGH_SCORES = HighScores()
+SCENE_MANAGER = SceneManager() --OUR SCENE MANAGER CLASS IS INSTANTIALIZED
 
-TitleScene()
+
+TitleScene() --LOADS OUR FIRST SCENE
 
 gfx.setImageDrawMode(gfx.kDrawModeNXOR)
 ----------------------------------------------------------------------------------------------------
 function pd.update()
     gfx.sprite.update()
-    ScoreTracker()
-    DevMode()
+    ScoreTracker() --THIS DRAWS OUR SCORE VALUE WHEN/WHERE WE NEED IT
+    --DevMode() --SOME SHORTCUTS / HOTKEYS USEFUL FOR DEV
 end
 ----------------------------------------------------------------------------------------------------
 

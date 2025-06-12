@@ -1,4 +1,5 @@
-
+--TITLE SCENE DISPLAYS TITLE AND SCOREBOARD
+--EVENTUALLY WE MAY ADD TUTORIAL SECTION / OPTION TO RESET SCOREBOARD
 
 local pd = playdate
 local gfx = pd.graphics
@@ -6,7 +7,6 @@ local gfx = pd.graphics
 class('TitleScene').extends(gfx.sprite)
 
 function TitleScene:init()
-
     --TITLE TEXT SPRITE
     local text = "WAXING GIBBOUS"
     local titleImage = gfx.image.new(gfx.getTextSize(text))
@@ -29,13 +29,13 @@ function TitleScene:init()
     messageSprite:moveTo(200,60)
     messageSprite:add()
     
-    InitializeScoreBoard()
+    InitializeScoreBoard() --CREATES INSTANCE OF SCOREBOARD OBJECT
     self:add()
     TitleSound:play(1)
 end
 
 function TitleScene:update()
-    if pd.buttonJustPressed(pd.kButtonB) then
+    if pd.buttonJustPressed(pd.kButtonB) then --HITTING 'B' ON TITLE SCREEN STARTS THE GAME
         SCENE_MANAGER:switchScene(GameScene)
     end
 end

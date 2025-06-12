@@ -1,33 +1,21 @@
+--ENEMY OBJECT
+--SPAWNS FROM EARTH CIRCUMFERENCE(RANDOMIZED POINT), TRAVELS TO OFF SCREEN(RANDOMIZED POINT)
+--IF ENEMY TOUCHES MOON, IT IS GAME OVER
+--ENEMY SPEED AND SPAWN RATE INCREASE AS PLAYER SCORE INCREASES
+
 import "CoreLibs/sprites"
 import "CoreLibs/animation"
 import "CoreLibs/animator"
-
 
 local pd = playdate
 local gfx = pd.graphics
 
 class('Enemy').extends(gfx.sprite)
 
---CREATION OF IMAGE TABLE FOR ENEMY ANIMATION
---[[
-ImageTable = gfx.imagetable.new(4)
-local enemyImage1 = gfx.image.new("images/enemy1")
-local enemyImage2 = gfx.image.new("images/enemy2")
-local enemyImage3 = gfx.image.new("images/enemy3")
-local enemyImage4 = gfx.image.new("images/enemy4")
-EnemyImageTable:setImage(1,enemyImage1)
-EnemyImageTable:setImage(2,enemyImage2)
-EnemyImageTable:setImage(3,enemyImage3)
-EnemyImageTable:setImage(4,enemyImage4)
-EnemyAnimation = gfx.animation.loop.new(250,EnemyImageTable,true)
-]]
-
---FIGURE OUT HOW TO MAKE SPRITE ANIMATIONS
-
-EnemySpawnRate = 60
+EnemySpawnRate = 60 --THIS IS AMOUNT OF FRAMES, AT 30FPS THE ENEMY INITIALLY SPAWNS ONCE EVERY TWO SECONDS
 EnemyTimer = pd.frameTimer.new(EnemySpawnRate)
 EnemyTimer.repeats = true
-EnemySpeed = 10000
+EnemySpeed = 10000 --TRAVEL SPEED
 
 function Enemy:init()
     local enemyImage1 = gfx.image.new("images/enemy1")
@@ -38,19 +26,17 @@ function Enemy:init()
     local enemySpawnerLength = (EarthInitRadius + EarthGrowth)*(2*3.14159265) --CIRCUMFERENCE EQUALS TWO-PI-R
     print("enemySpawnerLength: "..enemySpawnerLength)
     local enemyTargetLength = 1507.964
-    local spawnPoint = EnemySpawner:pointOnArc(math.random()*enemySpawnerLength)
-    local targetPoint = EnemyTargetCircle:pointOnArc(math.random()*enemyTargetLength)
+    local spawnPoint = EnemySpawner:pointOnArc(math.random()*enemySpawnerLength) --THIS IS POINT ON THE EARTH'S CIRCUMFERENCE
+    local targetPoint = EnemyTargetCircle:pointOnArc(math.random()*enemyTargetLength) --THIS IS A POINT ON A CIRCLE THAT SURROUNDS THE SCREEN
     self:moveTo(spawnPoint)
     local enemyAnimator = gfx.animator.new(EnemySpeed,spawnPoint, targetPoint)
-    self:setAnimator(enemyAnimator)
+    self:setAnimator(enemyAnimator) --ANIMATOR IS A LINE SEGMENT (FROM EARTH CIRCUMFERENCE TO A POINT OFF-SCREEN) THAT BULLET FOLLOWS AT RATE OF EnemySpeed
 end
 
 function Enemy:update()
     Enemy.super.update(self)
     local actualX, actualY, collisions, length = self:checkCollisions(self.x,self.y)
-
-    if length > 0 then
-      --CHECK FOR OVERLAPPING SPRITES
+    if length > 0 then --WE LOOK AT LENGTH OF LIST OF SPRITES TOUCHING ENEMY
       local otherSprite = self:overlappingSprites()
       if otherSprite[1] == BulletInstance then --IF COLLISION WITH BULLET:
           otherSprite[1]:removeSprite()
@@ -67,22 +53,19 @@ function Enemy:update()
     end
 end
 
-
-function EnemyTimerResetCheck()
+function EnemyTimerResetCheck() --SPAWNS AN ENEMY WHEN EnemyTimer REACHES VALUE OF EnemySpawnRate
   if EnemyTimer.frame == EnemySpawnRate then
-    EnemySpawn()
+    EnemySpawn() --TIMER IS RESET WITHIN THIS FUNCTION
   end
 end
 
-function ResetEnemyRate()
+function ResetEnemyRate() --USED TO MAKE THE ENEMY SPAWN RATE QUICKER
   EnemySpawnRate = (EnemySpawnRate) * (7/8)
   EnemySpawnRate = (EnemySpawnRate) // (1)
 end
 
-
 function EnemySpawn()
-  EnemyInstance = Enemy()
+  EnemyInstance = Enemy() --CREATES INSTANCE OF ENEMY
   EnemyInstance:add()
-  EnemyTimer:reset()
+  EnemyTimer:reset() --RESETS TIMER HANDLING ENEMY SPAWN
 end
-

@@ -1,3 +1,5 @@
+--SCOREBOARD OBJECT HANDLES DISPLAY AND SORTING OF SCOREBOARD DATA AND DISPLAY
+
 import "CoreLibs/sprites"
 import "CoreLibs/graphics"
 
@@ -6,17 +8,12 @@ local gfx = pd.graphics
 
 class('ScoreBoard').extends(gfx.sprite)
 
-
-
 function ScoreBoard:init()
-    --local topScore = ScoreArray[1][3] --HOW TO GRAB THE SCORE VALUE FROM ENTRY WITHIN ScoreArray
     ScoreBoard.super.init(self)
-    --ScoreToTextIndex() --makes copy of ScoreArray called "ScoreTextArray" where all entries are strings
     gfx.setFont(Topaz11Font)
     gfx.setColor(gfx.kColorBlack)
     ScoreDraw()
     --ScoreBoardPrintCheck()
-    --HighScoreCheck() --is now in gameOverScene:init()
     self:add()
 end
 
@@ -29,11 +26,7 @@ function InitializeScoreBoard()
     ScoreBoardInstance:add()
 end
 
-function ReinitializeScoreBoard() --INCOMPLETE
-
-end
-
-function HighScoreCheck()
+function HighScoreCheck() --CHECKS TO SEE IF SCORE QUALIFIES TO SIT ON THE BOARD
     print("\nHighScoreCheck")
     RankOccurs = false
     BoardRank = 0
@@ -68,15 +61,7 @@ function HighScoreCheck()
     print("\n")
 end
 
-
-function RankPlacement() --INCOMPLETE
---we will have RankOccurs (true or false)
---we will have BoardRank (1-8)  or (0)
---we will have ScoreArray, which we want to write into
---WE WANT TO WORK OUR WAY FROM THE BOTTOM UP, REWRITING
-end
-
-function ScoreRedraw() --INCOMPLETE
+function ScoreDraw() --DISPLAYS SCOREBOARD
     local collumn1x = 150 --index number
     local collumn2x = 170 --inital 1
     local collumn3x = 180 --inital 2
@@ -137,68 +122,7 @@ function ScoreRedraw() --INCOMPLETE
     end
 end
 
-function ScoreDraw()
-    local collumn1x = 150 --index number
-    local collumn2x = 170 --inital 1
-    local collumn3x = 180 --inital 2
-    local collumn4x = 190 --initial 3
-    local collumn5x = 250 --score value
-    local verticalSpacing = 0
-    local yStart = 120
-    for i = 1,8 do --in ScoreArray
-        local scoreEntry = ScoreArray[i]
-        local initials = scoreEntry[2]
-
-        local index1Image = gfx.image.new(gfx.getTextSize(scoreEntry[1]))
-        gfx.pushContext(index1Image)
-            gfx.drawText(scoreEntry[1],0,0)
-        gfx.popContext()
-
-        local initial1Image = gfx.image.new(gfx.getTextSize(initials[1]))
-        gfx.pushContext(initial1Image)
-            gfx.drawText(initials[1],0,0)
-        gfx.popContext()
-
-        local initial2Image = gfx.image.new(gfx.getTextSize(initials[2]))
-        gfx.pushContext(initial2Image)
-            gfx.drawText(initials[2],0,0)
-        gfx.popContext()
-
-        local initial3Image = gfx.image.new(gfx.getTextSize(initials[3]))
-        gfx.pushContext(initial3Image)
-            gfx.drawText(initials[3],0,0)
-        gfx.popContext()
-
-        local scoreImage = gfx.image.new(gfx.getTextSize(scoreEntry[3]))
-        gfx.pushContext(scoreImage)
-            gfx.drawText(scoreEntry[3],0,0)
-        gfx.popContext()
-
-        local index1Sprite = gfx.sprite.new(index1Image)
-        local initial1Sprite = gfx.sprite.new(initial1Image)
-        local initial2Sprite = gfx.sprite.new(initial2Image)
-        local initial3Sprite = gfx.sprite.new(initial3Image)
-        local scoreSprite = gfx.sprite.new(scoreImage)
-
-        index1Sprite:setCenter(0,0.5)
-        scoreSprite:setCenter(1,0.5)
-
-        index1Sprite:moveTo(collumn1x,yStart+verticalSpacing)
-        initial1Sprite:moveTo(collumn2x,yStart+verticalSpacing)
-        initial2Sprite:moveTo(collumn3x,yStart+verticalSpacing)
-        initial3Sprite:moveTo(collumn4x,yStart+verticalSpacing)
-        scoreSprite:moveTo(collumn5x,yStart+verticalSpacing)
-
-        verticalSpacing += 15
-        index1Sprite:add()
-        initial1Sprite:add()
-        initial2Sprite:add()
-        initial3Sprite:add()
-        scoreSprite:add()
-    end
-end
-
-function RedoScoreArray()
+function RedoScoreArray() --REDRAWS UPDATED SCOREBOARD
     local pastScore1 = HighScore1
     local pastScore2 = HighScore2
     local pastScore3 = HighScore3
@@ -324,7 +248,7 @@ function RedoScoreArray()
     end
 end
 
-function LoadScoreArrayFromTemplate()
+function LoadScoreArrayFromTemplate() --FILLS SCORES FROM TEMPLATE INTO ScoreArray
     ScoreArray = {
         [1] = HighScore1,
         [2] = HighScore2,
@@ -337,7 +261,7 @@ function LoadScoreArrayFromTemplate()
         }
 end
 
-function LoadScoreBoardTemplate() --creates ScoreArray, global array with all scoreboard info
+function LoadScoreBoardTemplate() --TEMPLATE USED WITH FAKE SCORES
     Name1 = {"W","A","X"}
     Name2 = {"K","Y","L"}
     Name3 = {"G","U","M"}
@@ -357,7 +281,7 @@ function LoadScoreBoardTemplate() --creates ScoreArray, global array with all sc
     LoadScoreArrayFromTemplate()
 end
 
-function ScoreArrayBuildUp()
+function ScoreArrayBuildUp() --USED TO CONVERT SAVE DATA INTO ScoreArray FORMAT
     Name1 = {ScoreSave[2],ScoreSave[3],ScoreSave[4]}
     Name2 = {ScoreSave[7],ScoreSave[8],ScoreSave[9]}
     Name3 = {ScoreSave[12],ScoreSave[13],ScoreSave[14]}
@@ -377,7 +301,7 @@ function ScoreArrayBuildUp()
     LoadScoreArrayFromTemplate()
 end
 
-function ScoreArrayBreakDown()
+function ScoreArrayBreakDown() --USED TO BREAK DOWN ScoreArray into SAVE-ABLE FORMAT
     Save1_1 = ScoreArray[1][1]
     Save1_2 = ScoreArray[1][2][1]
     Save1_3 = ScoreArray[1][2][2]
@@ -462,7 +386,7 @@ function ScoreArrayBreakDown()
     }
 end
 
-function ScoreToTextIndex()
+function ScoreToTextIndex() --USED TO CONVERT SCOREBOARD DATA INTO STRINGS; currently unused
     ScoreTextArray = ScoreArray --make a copy of ScoreArray that will be edited to strings
   for i = 1, 8 do --ScoreTextArray
     local scoreGrab = ScoreTextArray[i]
@@ -489,7 +413,7 @@ function ScoreBoardPrintCheck() --prints out every index within ScoreArray
     end
 end
 
-function ScoreRankMessage()
+function ScoreRankMessage() --TELLS PLAYER THEIR SCORE RANK
     if RankOccurs == true then
         local rankText = "YOU HAVE RANKED "..tostring(BoardRank)
         print(rankText)
